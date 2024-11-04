@@ -44,6 +44,11 @@ DEBUG = 'DEV' in os.environ
 
 ALLOWED_HOSTS = ['8000-yagavi1994-memoriesapi-ld3cautgy5w.ws.codeinstitute-ide.net']
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://8000-yagavi1994-memoriesapi-ld3cautgy5w.ws.codeinstitute-ide.net',
+
+]
+
 
 # Application definition
 
@@ -56,6 +61,8 @@ INSTALLED_APPS = [
     'cloudinary_storage',
     'django.contrib.staticfiles',
     'cloudinary',
+
+    'profiles',
 
 ]
 
