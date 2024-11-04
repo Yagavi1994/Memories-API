@@ -69,7 +69,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = 'DEV' in os.environ
 
 ALLOWED_HOSTS = [
-    'https://8000-yagavi1994-memoriesapi-ld3cautgy5w.ws.codeinstitute-ide.net',
+    '8000-yagavi1994-memoriesapi-ld3cautgy5w.ws.codeinstitute-ide.net',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
