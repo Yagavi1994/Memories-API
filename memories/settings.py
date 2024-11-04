@@ -70,12 +70,12 @@ DEBUG = 'DEV' in os.environ
 
 ALLOWED_HOSTS = [
     '8000-yagavi1994-memoriesapi-ld3cautgy5w.ws.codeinstitute-ide.net',
-    'memories-backend-16d0ed87a1d2.herokuapp.com',
+    os.environ.get('ALLOWED_HOST'),
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'https://8000-yagavi1994-memoriesapi-ld3cautgy5w.ws.codeinstitute-ide.net',
-    'https://memories-backend-16d0ed87a1d2.herokuapp.com/',
+    'https://memories-backend-16d0ed87a1d2.herokuapp.com',
 ]
 
 if 'CLIENT_ORIGIN' in os.environ:
