@@ -76,6 +76,8 @@ ALLOWED_HOSTS = [
 CSRF_TRUSTED_ORIGINS = [
     'https://8000-yagavi1994-memoriesapi-ld3cautgy5w.ws.codeinstitute-ide.net',
     'https://memories-backend-16d0ed87a1d2.herokuapp.com',
+    'https://3000-yagavi1994-memories-hon8xwpgdwv.ws.codeinstitute-ide.net',
+    'https://memories-frontend-895c7e867e2e.herokuapp.com',
 ]
 
 if 'CLIENT_ORIGIN' in os.environ:
