@@ -1,18 +1,22 @@
 from django.db import models
 from django.contrib.auth.models import User
-from PIL import Image  # Import the PIL library for image processing
+
 
 class Post(models.Model):
     """
-    Post model, related to 'owner', i.e., a User instance.
+    Post model, related to 'owner', i.e. a User instance.
     Default image set so that we can always reference image.url.
     """
+    
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     title = models.CharField(max_length=255)
     content = models.TextField(blank=True)
-    image = models.ImageField(upload_to='images/', default='images/default-post_xflbfc', blank=True)
+    
+    image = models.ImageField(
+        upload_to='images/', default='images/default-post_xflbfc', blank=True
+    )
 
     class Meta:
         ordering = ['-created_at']
@@ -20,16 +24,3 @@ class Post(models.Model):
     def __str__(self):
         return f'{self.id} {self.title}'
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-
-        if self.image:
-            img = Image.open(self.image.path)
-
-            # Resize the image height to 500px while maintaining the aspect ratio
-            width, height = img.size
-            new_height = 500
-            new_width = int((new_height / height) * width)
-
-            img = img.resize((new_width, new_height), Image.ANTIALIAS)
-            img.save(self.image.path)
