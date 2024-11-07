@@ -49,7 +49,7 @@ class MilestoneSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
             "title",
-            "description",
+            "content",
             "milestone_date",
             "image",
             "like_id", 

@@ -12,7 +12,7 @@ class Milestone(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     title = models.CharField(max_length=255)
-    description = models.TextField(blank=True)
+    content = models.TextField(blank=True)
     milestone_date = models.DateField(blank=False)
     image = models.ImageField(
         upload_to="images/", default="images/default_milestone_tmodxy", blank=False
