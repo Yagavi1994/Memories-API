@@ -32,7 +32,7 @@ class MilestoneSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         if user.is_authenticated:
             like = Like.objects.filter(
-                owner=user, post=obj
+                owner=user, milestone=obj
             ).first()
             return like.id if like else None
         return None
