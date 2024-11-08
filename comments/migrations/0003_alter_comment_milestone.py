@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='comment',
             name='milestone',
-            field=models.ForeignKey(default=4, on_delete=django.db.models.deletion.CASCADE, to='milestones.milestone'),
+            field=models.ForeignKey(default=6, on_delete=django.db.models.deletion.CASCADE, to='milestones.milestone'),
             preserve_default=False,
         ),
     ]
