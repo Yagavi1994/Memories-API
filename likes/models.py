@@ -16,7 +16,7 @@ class Like(models.Model):
         Post, related_name='likes', on_delete=models.CASCADE
     )
     milestone = models.ForeignKey(
-        Milestone, related_name='likes', on_delete=models.CASCADE)
+        Milestone, related_name='likes', on_delete=models.CASCADE, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
