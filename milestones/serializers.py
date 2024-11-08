@@ -9,7 +9,7 @@ class MilestoneSerializer(serializers.ModelSerializer):
     is_owner = serializers.SerializerMethodField()
     profile_id = serializers.ReadOnlyField(source="owner.profile.id")
     profile_image = serializers.ReadOnlyField(
-        source="owner.profile.profile_picture.url"
+        source="owner.profile.image.url"
     )
     like_id = serializers.SerializerMethodField()
     likes_count = serializers.ReadOnlyField()
