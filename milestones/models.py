@@ -23,7 +23,9 @@ class Milestone(models.Model):
     age_years = models.PositiveIntegerField(null=True, blank=True)
     age_months = models.PositiveIntegerField(null=True, blank=True)
     height = models.PositiveIntegerField(null=True, blank=True, help_text="Height in cm")
-    weight = models.PositiveIntegerField(null=True, blank=True, help_text="Weight in kg")
+    weight = models.DecimalField(
+        max_digits=4, decimal_places=1, null=True, blank=True, help_text="Weight in kg"
+    ) 
     milestone_category = models.CharField(
         max_length=20,
         choices=CATEGORY_CHOICES,

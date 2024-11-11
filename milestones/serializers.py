@@ -14,6 +14,8 @@ class MilestoneSerializer(serializers.ModelSerializer):
     like_id = serializers.SerializerMethodField()
     likes_count = serializers.ReadOnlyField()
     comments_count = serializers.ReadOnlyField()
+    milestone_category_display = serializers.CharField(source='get_milestone_category_display', read_only=True)
+
 
     def validate_image(self, value):
         if value.size > 2 * 1024 * 1024:
@@ -59,5 +61,6 @@ class MilestoneSerializer(serializers.ModelSerializer):
             "age_months",
             "height", 
             "weight", 
-            "milestone_category"
+            "milestone_category",
+            "milestone_category_display",
         ]
