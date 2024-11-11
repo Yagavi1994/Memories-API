@@ -21,7 +21,10 @@ class Like(models.Model):
 
     class Meta:
         ordering = ['-created_at']
-        unique_together = ['owner', 'post']
+        constraints = [
+            models.UniqueConstraint(fields=['owner', 'post'], name='unique_like_post'),
+            models.UniqueConstraint(fields=['owner', 'milestone'], name='unique_like_milestone')
+        ]
 
     def __str__(self):
         return f'{self.owner} {self.post}'
