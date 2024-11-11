@@ -55,4 +55,9 @@ class MilestoneSerializer(serializers.ModelSerializer):
             "like_id", 
             "likes_count", 
             "comments_count",
+            "age_years", 
+            "age_months",
+            "height", 
+            "weight", 
+            "milestone_category"
         ]
