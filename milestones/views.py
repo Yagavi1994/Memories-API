@@ -53,5 +53,5 @@ class MilestoneDetail(generics.RetrieveUpdateDestroyAPIView):
     ).order_by('-created_at')
 
 def get_serializer(self, *args, **kwargs):
-    kwargs['partial'] = True  # Allow partial updates
-    return super().get_serializer(*args, **kwargs)
+        kwargs['partial'] = True  # Allow partial updates
+        return super().get_serializer(*args, **kwargs)

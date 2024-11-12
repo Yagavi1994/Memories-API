@@ -14,7 +14,7 @@ class MilestoneSerializer(serializers.ModelSerializer):
     comments_count = serializers.ReadOnlyField()
     age_years = serializers.IntegerField(required=False, allow_null=True)
     age_months = serializers.IntegerField(required=False, allow_null=True)
-    height = serializers.DecimalField(max_digits=5, decimal_places=2, required=False, allow_null=True)
+    height = serializers.IntegerField(required=False, allow_null=True)
     weight = serializers.DecimalField(max_digits=5, decimal_places=2, required=False, allow_null=True)
     milestone_date = serializers.DateField(required=False, allow_null=True)
     content = serializers.CharField(required=False, allow_blank=True)
@@ -42,16 +42,17 @@ class MilestoneSerializer(serializers.ModelSerializer):
         return None
 
     def validate(self, data):
-        # Convert any '0' values for age, height, or weight to None
+        # Convert '0' values for numeric fields to None
         fields_to_check = ['age_years', 'age_months', 'height', 'weight']
         for field in fields_to_check:
             if data.get(field) == 0:
                 data[field] = None
+
+        # Set milestone_date to None if it's not provided
+        if 'milestone_date' not in data:
+            data['milestone_date'] = None
+            
         return data
-
-        # Allow milestone_date to be optional by checking if it's present
-        data['milestone_date'] = data.get('milestone_date', None)
-
     class Meta:
         model = Milestone
         fields = [
