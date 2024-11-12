@@ -30,7 +30,7 @@ class Milestone(models.Model):
     milestone_category = models.CharField(
         max_length=20,
         choices=CATEGORY_CHOICES,
-        default='other',
+        default='physical',
         help_text="Category of the milestone",
     )
 

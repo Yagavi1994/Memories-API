@@ -49,6 +49,9 @@ class MilestoneSerializer(serializers.ModelSerializer):
                 data[field] = None
         return data
 
+        # Allow milestone_date to be optional by checking if it's present
+        data['milestone_date'] = data.get('milestone_date', None)
+
     class Meta:
         model = Milestone
         fields = [
