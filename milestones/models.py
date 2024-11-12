@@ -7,6 +7,7 @@ class Milestone(models.Model):
         ('cognitive', 'Cognitive'),
         ('emotional', 'Emotional'),
         ('social', 'Social'),
+        ('motor', 'Motor'),
         ('language', 'Language'),
         ('other', 'Other'),
     ]
@@ -16,7 +17,7 @@ class Milestone(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     title = models.CharField(max_length=255)
     content = models.TextField(blank=True)
-    milestone_date = models.DateField(blank=False)
+    milestone_date = models.DateField(blank=True)
     image = models.ImageField(
         upload_to="images/", default="images/default_milestone_tmodxy", blank=False
     )
