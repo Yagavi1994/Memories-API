@@ -5,6 +5,8 @@ from rest_framework.response import Response
 from memories.permissions import IsOwnerOrReadOnly
 from .models import Milestone
 from .serializers import MilestoneSerializer
+from rest_framework.views import APIView
+
 
 class MilestoneList(generics.ListCreateAPIView):
     """
@@ -52,6 +54,24 @@ class MilestoneDetail(generics.RetrieveUpdateDestroyAPIView):
         comments_count=Count('comment', distinct=True)
     ).order_by('-created_at')
 
-def get_serializer(self, *args, **kwargs):
-        kwargs['partial'] = True  # Allow partial updates
-        return super().get_serializer(*args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        kwargs['partial'] = True  # Ensure partial update is allowed
+        return self.update(request, *args, **kwargs)
+
+class MilestoneUpdate(APIView):
+    """
+    Custom view to handle milestone updates using POST.
+    """
+    permission_classes = [IsOwnerOrReadOnly]
+
+    def post(self, request, pk, format=None):
+        try:
+            milestone = Milestone.objects.get(pk=pk, owner=request.user)
+        except Milestone.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = MilestoneSerializer(milestone, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
