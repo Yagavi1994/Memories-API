@@ -12,14 +12,12 @@ class MilestoneSerializer(serializers.ModelSerializer):
     like_id = serializers.SerializerMethodField()
     likes_count = serializers.ReadOnlyField()
     comments_count = serializers.ReadOnlyField()
-    milestone_category_display = serializers.SerializerMethodField()
-
     age_years = serializers.IntegerField(required=False, allow_null=True)
     age_months = serializers.IntegerField(required=False, allow_null=True)
     height = serializers.DecimalField(max_digits=5, decimal_places=2, required=False, allow_null=True)
     weight = serializers.DecimalField(max_digits=5, decimal_places=2, required=False, allow_null=True)
-    milestone_date = serializers.DateField(required=False, allow_null=True)  # Optional field
-    content = serializers.CharField(required=False, allow_blank=True)  # Optional field
+    milestone_date = serializers.DateField(required=False, allow_null=True)
+    content = serializers.CharField(required=False, allow_blank=True)
 
     def validate_image(self, value):
         if value.size > 2 * 1024 * 1024:
@@ -43,9 +41,13 @@ class MilestoneSerializer(serializers.ModelSerializer):
             return like.id if like else None
         return None
 
-    def get_milestone_category_display(self, obj):
-        # Display the label for the milestone category field
-        return obj.get_milestone_category_display()
+    def validate(self, data):
+        # Convert any '0' values for age, height, or weight to None
+        fields_to_check = ['age_years', 'age_months', 'height', 'weight']
+        for field in fields_to_check:
+            if data.get(field) == 0:
+                data[field] = None
+        return data
 
     class Meta:
         model = Milestone
@@ -69,5 +71,4 @@ class MilestoneSerializer(serializers.ModelSerializer):
             "height", 
             "weight", 
             "milestone_category",
-            "milestone_category_display",
         ]

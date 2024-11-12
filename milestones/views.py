@@ -1,11 +1,10 @@
 from django.db.models import Count
-from rest_framework import generics, permissions, filters
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework import generics, permissions, filters, status
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.response import Response
 from memories.permissions import IsOwnerOrReadOnly
 from .models import Milestone
 from .serializers import MilestoneSerializer
-
 
 class MilestoneList(generics.ListCreateAPIView):
     """
@@ -44,7 +43,7 @@ class MilestoneList(generics.ListCreateAPIView):
 
 class MilestoneDetail(generics.RetrieveUpdateDestroyAPIView):
     """
-    Retrieve a post and edit or delete it if you own it.
+    Retrieve a milestone and edit or delete it if you own it.
     """
     serializer_class = MilestoneSerializer
     permission_classes = [IsOwnerOrReadOnly]
@@ -52,3 +51,11 @@ class MilestoneDetail(generics.RetrieveUpdateDestroyAPIView):
         likes_count=Count('likes', distinct=True),
         comments_count=Count('comment', distinct=True)
     ).order_by('-created_at')
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', True)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data, status=status.HTTP_200_OK)
