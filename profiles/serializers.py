@@ -25,11 +25,20 @@ class ProfileSerializer(serializers.ModelSerializer):
             return following.id if following else None
         return None
 
+    def get_can_view_posts(self, obj):
+        # This attribute is set dynamically in the view
+        return getattr(obj, 'can_view_posts', True)
+
+    def get_can_view_milestones(self, obj):
+        # This attribute is set dynamically in the view
+        return getattr(obj, 'can_view_milestones', True)
+
     class Meta:
         model = Profile
         fields = [
             'id', 'owner', 'created_at', 'updated_at', 'name',
             'content', 'image', 'is_owner', 'following_id',
             'posts_count', 'followers_count', 'following_count', 
-            'milestones_count', 'is_private',
+            'milestones_count', 'is_private',  'can_view_posts',
+            'can_view_milestones',
         ]

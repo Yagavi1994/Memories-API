@@ -58,8 +58,13 @@ class ProfileDetail(generics.RetrieveUpdateAPIView):
 
         # Check if the profile is private and the user is not allowed to view it
         if profile.is_private and not (
-            user.is_authenticated and (user == profile.owner or Follower.objects.filter(owner=user, followed=profile.owner).exists())
+            user.is_authenticated
+            and (user == profile.owner or Follower.objects.filter(owner=user, followed=profile.owner).exists())
         ):
-            raise PermissionDenied("This profile is private.")
+            profile.can_view_posts = False  # Custom attribute for posts visibility
+            profile.can_view_milestones = False  # Custom attribute for milestones visibility
+        else:
+            profile.can_view_posts = True
+            profile.can_view_milestones = True
 
         return profile
