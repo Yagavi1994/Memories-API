@@ -10,7 +10,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     milestones_count = serializers.ReadOnlyField()
     followers_count = serializers.ReadOnlyField()
     following_count = serializers.ReadOnlyField()
-    is_private = serializers.BooleanField(required=False)  # New field for privacy setting
+    is_private = serializers.BooleanField(required=False)
 
     def get_is_owner(self, obj):
         request = self.context['request']
