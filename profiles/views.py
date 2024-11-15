@@ -6,6 +6,7 @@ from .models import Profile
 from .serializers import ProfileSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from followers.models import Follower
+from rest_framework.exceptions import PermissionDenied
 
 
 class ProfileList(generics.ListAPIView):

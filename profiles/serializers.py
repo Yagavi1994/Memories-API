@@ -31,5 +31,5 @@ class ProfileSerializer(serializers.ModelSerializer):
             'id', 'owner', 'created_at', 'updated_at', 'name',
             'content', 'image', 'is_owner', 'following_id',
             'posts_count', 'followers_count', 'following_count', 
-            'milestones_count', 'is_private'  # Include the is_private field
+            'milestones_count', 'is_private',
         ]
