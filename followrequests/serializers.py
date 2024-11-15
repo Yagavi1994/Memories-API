@@ -4,7 +4,7 @@ from .models import FollowRequest
 class FollowRequestSerializer(serializers.ModelSerializer):
     requester = serializers.ReadOnlyField(source='requester.username')
     receiver = serializers.ReadOnlyField(source='receiver.username')
-    requester_profile_image = serializers.CharField(source="requester.profile_image.url", read_only=True)
+    requester_profile_image = serializers.CharField(source="requester.profile.profile_image.url", read_only=True)
     requester_username = serializers.CharField(source="requester.username", read_only=True)
 
     class Meta:
