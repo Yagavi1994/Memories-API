@@ -56,15 +56,18 @@ class ProfileDetail(generics.RetrieveUpdateAPIView):
         profile = super().get_object()
         user = self.request.user
 
-        # Check if the profile is private and the user is not allowed to view it
+        # Default visibility flags to True, allowing access to posts and milestones
+        profile.can_view_posts = True
+        profile.can_view_milestones = True
+
+        # If profile is private and the user is not authorized, restrict posts and milestones
         if profile.is_private and not (
-            user.is_authenticated
-            and (user == profile.owner or Follower.objects.filter(owner=user, followed=profile.owner).exists())
+            user.is_authenticated and (
+                user == profile.owner or 
+                Follower.objects.filter(owner=user, followed=profile.owner).exists()
+            )
         ):
             profile.can_view_posts = False
             profile.can_view_milestones = False
-        else:
-            profile.can_view_posts = True
-            profile.can_view_milestones = True
 
         return profile
