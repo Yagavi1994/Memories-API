@@ -4,6 +4,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from memories.permissions import IsOwnerOrReadOnly
 from .models import Profile
 from .serializers import ProfileSerializer
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from followers.models import Follower
 
 
 class ProfileList(generics.ListAPIView):
@@ -37,14 +39,18 @@ class ProfileList(generics.ListAPIView):
 
 
 class ProfileDetail(generics.RetrieveUpdateAPIView):
-    """
-    Retrieve or update a profile if you're the owner.
-    """
-    permission_classes = [IsOwnerOrReadOnly]
-    queryset = Profile.objects.annotate(
-        posts_count=Count('owner__post', distinct=True),
-        milestones_count=Count('owner__milestone', distinct=True),
-        followers_count=Count('owner__followed', distinct=True),
-        following_count=Count('owner__following', distinct=True)
-    ).order_by('-created_at')
-    serializer_class = ProfileSerializer
+    permission_classes = [IsOwnerOrReadOnly, IsAuthenticatedOrReadOnly]
+    
+    def get_queryset(self):
+        user = self.request.user
+        profile = Profile.objects.annotate(
+            posts_count=Count('owner__post', distinct=True),
+            milestones_count=Count('owner__milestone', distinct=True),
+            followers_count=Count('owner__followed', distinct=True),
+            following_count=Count('owner__following', distinct=True)
+        ).order_by('-created_at')
+
+        if profile.is_private:
+            if not Follower.objects.filter(followed=profile.owner, owner=user).exists():
+                return Profile.objects.none()  # Restrict access
+        return profile
