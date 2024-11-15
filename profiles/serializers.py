@@ -11,6 +11,8 @@ class ProfileSerializer(serializers.ModelSerializer):
     followers_count = serializers.ReadOnlyField()
     following_count = serializers.ReadOnlyField()
     is_private = serializers.BooleanField(required=False)
+    can_view_posts = serializers.SerializerMethodField()
+    can_view_milestones = serializers.SerializerMethodField() 
 
     def get_is_owner(self, obj):
         request = self.context['request']
@@ -26,11 +28,11 @@ class ProfileSerializer(serializers.ModelSerializer):
         return None
 
     def get_can_view_posts(self, obj):
-        # This attribute is set dynamically in the view
+        # Access the dynamic attribute set in the view
         return getattr(obj, 'can_view_posts', True)
 
     def get_can_view_milestones(self, obj):
-        # This attribute is set dynamically in the view
+        # Access the dynamic attribute set in the view
         return getattr(obj, 'can_view_milestones', True)
 
     class Meta:

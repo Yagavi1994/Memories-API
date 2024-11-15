@@ -61,8 +61,8 @@ class ProfileDetail(generics.RetrieveUpdateAPIView):
             user.is_authenticated
             and (user == profile.owner or Follower.objects.filter(owner=user, followed=profile.owner).exists())
         ):
-            profile.can_view_posts = False  # Custom attribute for posts visibility
-            profile.can_view_milestones = False  # Custom attribute for milestones visibility
+            profile.can_view_posts = False
+            profile.can_view_milestones = False
         else:
             profile.can_view_posts = True
             profile.can_view_milestones = True
