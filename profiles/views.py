@@ -8,17 +8,16 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from followers.models import Follower
 from rest_framework.exceptions import PermissionDenied
 
-
 class ProfileList(generics.ListAPIView):
     """
     List all profiles.
-    No create view as profile creation is handled by django signals.
+    No create view as profile creation is handled by Django signals.
     """
     queryset = Profile.objects.annotate(
         posts_count=Count('owner__post', distinct=True),
-        milestones_count=Count('owner__milestone', distinct=True),
-        followers_count=Count('owner__followed', distinct=True),
-        following_count=Count('owner__following', distinct=True)
+        milestones_count=Count('owner__milestone', distinct=True), 
+        followers_count=Count('owner__followed', distinct=True),  
+        following_count=Count('owner__following', distinct=True)    
     ).order_by('-created_at')
     serializer_class = ProfileSerializer
     filter_backends = [
@@ -40,14 +39,24 @@ class ProfileList(generics.ListAPIView):
 
 
 class ProfileDetail(generics.RetrieveUpdateAPIView):
-    queryset = Profile.objects.all()
+    """
+    Retrieve or update a profile.
+    Only the owner can update their profile.
+    """
+    queryset = Profile.objects.annotate(
+        posts_count=Count('owner__post', distinct=True),
+        milestones_count=Count('owner__milestone', distinct=True),
+        followers_count=Count('owner__followed', distinct=True),
+        following_count=Count('owner__following', distinct=True)
+    )
     serializer_class = ProfileSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
     def get_object(self):
         profile = super().get_object()
         user = self.request.user
 
-        # Check if the profile is private and the user is not a follower
+        # Check if the profile is private and the user is not allowed to view it
         if profile.is_private and not (
             user.is_authenticated and (user == profile.owner or Follower.objects.filter(owner=user, followed=profile.owner).exists())
         ):
