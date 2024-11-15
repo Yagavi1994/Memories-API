@@ -39,18 +39,17 @@ class ProfileList(generics.ListAPIView):
 
 
 class ProfileDetail(generics.RetrieveUpdateAPIView):
-    permission_classes = [IsOwnerOrReadOnly, IsAuthenticatedOrReadOnly]
-    
-    def get_queryset(self):
-        user = self.request.user
-        profile = Profile.objects.annotate(
-            posts_count=Count('owner__post', distinct=True),
-            milestones_count=Count('owner__milestone', distinct=True),
-            followers_count=Count('owner__followed', distinct=True),
-            following_count=Count('owner__following', distinct=True)
-        ).order_by('-created_at')
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
 
-        if profile.is_private:
-            if not Follower.objects.filter(followed=profile.owner, owner=user).exists():
-                return Profile.objects.none()  # Restrict access
+    def get_object(self):
+        profile = super().get_object()
+        user = self.request.user
+
+        # Check if the profile is private and the user is not a follower
+        if profile.is_private and not (
+            user.is_authenticated and Follower.objects.filter(owner=user, followed=profile.owner).exists()
+        ):
+            raise PermissionDenied("This profile is private.")
+
         return profile
