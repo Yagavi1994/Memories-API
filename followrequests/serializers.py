@@ -23,12 +23,12 @@ class FollowRequestSerializer(serializers.ModelSerializer):
         ]
 
     def get_requester_profile_image(self, obj):
-        # Safely return the profile image URL or a default fallback image
-        try:
-            return obj.requester.profile.profile_image.url
-        except AttributeError:
-            # Fallback URL for missing profile images
-            return "https://res.cloudinary.com/dz60wxmka/image/upload/v1730812795/media/images/Profile-pic_dxmgt2.webp"
+        if obj.requester.profile.image:  # Assuming the Profile model has an image field
+            request = self.context.get('request')
+            # Generate absolute URL for the image
+            return request.build_absolute_uri(obj.requester.profile.image.url)
+        return None  # Return None if no profile image is set
+            # return "https://res.cloudinary.com/dz60wxmka/image/upload/v1730812795/media/images/Profile-pic_dxmgt2.webp"
 
     def validate(self, data):
         # Prevent users from sending follow requests to themselves
