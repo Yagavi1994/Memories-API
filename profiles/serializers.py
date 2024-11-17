@@ -11,7 +11,6 @@ class ProfileSerializer(serializers.ModelSerializer):
     followers_count = serializers.ReadOnlyField()
     following_count = serializers.ReadOnlyField()
     is_private = serializers.BooleanField(required=False)
-    profile_image = serializers.SerializerMethodField()
     can_view_posts = serializers.SerializerMethodField()
     can_view_milestones = serializers.SerializerMethodField() 
 
@@ -43,5 +42,5 @@ class ProfileSerializer(serializers.ModelSerializer):
             'content', 'image', 'is_owner', 'following_id',
             'posts_count', 'followers_count', 'following_count', 
             'milestones_count', 'is_private',  'can_view_posts',
-            'can_view_milestones', 'profile_image',
+            'can_view_milestones',
         ]
