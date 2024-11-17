@@ -20,17 +20,7 @@ class FollowRequestSerializer(serializers.ModelSerializer):
             'requester_username',
             'status',
             'created_at',
-            'request_sent',
         ]
-
-    def get_request_sent(self, obj):
-        # Check if a pending follow request exists for the logged-in user
-        user = self.context['request'].user
-        if user.is_authenticated:
-            return FollowRequest.objects.filter(
-                requester=user, receiver=obj.user, status='pending'
-            ).exists()
-        return False
 
     def get_requester_profile_image(self, obj):
         # Safely return the profile image URL or a default fallback image
