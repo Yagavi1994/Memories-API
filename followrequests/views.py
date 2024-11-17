@@ -54,7 +54,7 @@ class FollowRequestAcceptView(generics.UpdateAPIView):
 
         # Create a Follower entry upon acceptance
         Follower.objects.create(
-            user=follow_request.requester,
+            owner=follow_request.requester,
             followed=follow_request.receiver
         )
 
