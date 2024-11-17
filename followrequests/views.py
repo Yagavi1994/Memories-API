@@ -2,10 +2,11 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
+from rest_framework.exceptions import ValidationError
 from .models import FollowRequest
 from followers.models import Follower
 from .serializers import FollowRequestSerializer
-from rest_framework.exceptions import ValidationError
+
 
 class FollowRequestListCreateView(generics.ListCreateAPIView):
     queryset = FollowRequest.objects.all()
@@ -20,7 +21,7 @@ class FollowRequestListCreateView(generics.ListCreateAPIView):
         ).first()
 
         if existing_request:
-            # If a request exists, check its status
+            # Handle existing follow requests based on their status
             if existing_request.status == "accepted":
                 raise ValidationError("You are already following this user.")
             elif existing_request.status == "pending":
@@ -31,8 +32,9 @@ class FollowRequestListCreateView(generics.ListCreateAPIView):
                 existing_request.save()
                 return  # Skip creating a new request
 
-        # If no existing request, create a new follow request
+        # Create a new follow request if none exists
         serializer.save(requester=self.request.user)
+
 
 class FollowRequestAcceptView(generics.UpdateAPIView):
     queryset = FollowRequest.objects.all()
@@ -41,18 +43,23 @@ class FollowRequestAcceptView(generics.UpdateAPIView):
 
     def update(self, request, *args, **kwargs):
         follow_request = self.get_object()
-        if follow_request.status != 'pending':
-            return Response(
-                {"detail": "Only pending requests can be accepted."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        follow_request.status = 'accepted'
+
+        # Ensure only pending requests can be accepted
+        if follow_request.status != "pending":
+            raise ValidationError("Only pending requests can be accepted.")
+
+        # Update the status to accepted
+        follow_request.status = "accepted"
         follow_request.save()
-        
-        # Create a Follower record
-        Follower.objects.create(user=follow_request.requester, followed=follow_request.receiver)
-        
-        return Response(status=status.HTTP_200_OK)
+
+        # Create a Follower entry upon acceptance
+        Follower.objects.create(
+            user=follow_request.requester,
+            followed=follow_request.receiver
+        )
+
+        return Response({"detail": "Follow request accepted."}, status=status.HTTP_200_OK)
+
 
 class FollowRequestDeclineView(generics.DestroyAPIView):
     queryset = FollowRequest.objects.all()
@@ -60,12 +67,16 @@ class FollowRequestDeclineView(generics.DestroyAPIView):
 
     def destroy(self, request, *args, **kwargs):
         follow_request = self.get_object()
-        if follow_request.status != 'pending':
-            return Response(
-                {"detail": "Cannot decline a non-pending follow request."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        return super().destroy(request, *args, **kwargs)
+
+        # Ensure only pending requests can be declined
+        if follow_request.status != "pending":
+            raise ValidationError("Only pending requests can be declined.")
+
+        # Delete the request
+        follow_request.delete()
+
+        return Response({"detail": "Follow request declined."}, status=status.HTTP_200_OK)
+
 
 class FollowerDeleteView(generics.DestroyAPIView):
     queryset = Follower.objects.all()
@@ -74,7 +85,7 @@ class FollowerDeleteView(generics.DestroyAPIView):
     def destroy(self, request, *args, **kwargs):
         follower_instance = self.get_object()
 
-        # Update the FollowRequest status to "unfollowed" instead of deleting it
+        # Update the FollowRequest status to "unfollowed" if it exists
         FollowRequest.objects.filter(
             requester=follower_instance.user,
             receiver=follower_instance.followed
@@ -85,10 +96,14 @@ class FollowerDeleteView(generics.DestroyAPIView):
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
 class FollowRequestCountView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         # Count the number of pending follow requests for the logged-in user
-        count = FollowRequest.objects.filter(receiver=request.user, status='pending').count()
+        count = FollowRequest.objects.filter(
+            receiver=request.user,
+            status='pending'
+        ).count()
         return Response({"count": count})
