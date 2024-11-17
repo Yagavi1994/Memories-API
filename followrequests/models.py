@@ -8,7 +8,6 @@ class FollowRequest(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('requester', 'receiver')
-
+        pass
     def __str__(self):
         return f"Follow request from {self.requester} to {self.receiver}"

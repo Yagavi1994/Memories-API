@@ -5,25 +5,33 @@ from rest_framework.views import APIView
 from .models import FollowRequest
 from followers.models import Follower
 from .serializers import FollowRequestSerializer
+from rest_framework.exceptions import ValidationError
 
 class FollowRequestListCreateView(generics.ListCreateAPIView):
+    queryset = FollowRequest.objects.all()
     serializer_class = FollowRequestSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
-        return FollowRequest.objects.filter(receiver=self.request.user, status='pending')
-
     def perform_create(self, serializer):
-        # Prevent duplicate follow requests
-        if FollowRequest.objects.filter(
+        # Check if a follow request already exists between the requester and receiver
+        existing_request = FollowRequest.objects.filter(
             requester=self.request.user,
-            receiver=serializer.validated_data['receiver'],
-            status='pending'
-        ).exists():
-            return Response(
-                {"detail": "Follow request already sent."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            receiver=serializer.validated_data['receiver']
+        ).first()
+
+        if existing_request:
+            # If a request exists, check its status
+            if existing_request.status == "accepted":
+                raise ValidationError("You are already following this user.")
+            elif existing_request.status == "pending":
+                raise ValidationError("A follow request is already pending.")
+            else:
+                # Update the existing request to pending
+                existing_request.status = "pending"
+                existing_request.save()
+                return  # Skip creating a new request
+
+        # If no existing request, create a new follow request
         serializer.save(requester=self.request.user)
 
 class FollowRequestAcceptView(generics.UpdateAPIView):
@@ -58,6 +66,24 @@ class FollowRequestDeclineView(generics.DestroyAPIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
         return super().destroy(request, *args, **kwargs)
+
+class FollowerDeleteView(generics.DestroyAPIView):
+    queryset = Follower.objects.all()
+    permission_classes = [IsAuthenticated]
+
+    def destroy(self, request, *args, **kwargs):
+        follower_instance = self.get_object()
+
+        # Update the FollowRequest status to "unfollowed" instead of deleting it
+        FollowRequest.objects.filter(
+            requester=follower_instance.user,
+            receiver=follower_instance.followed
+        ).update(status="unfollowed")
+
+        # Delete the follower relationship
+        follower_instance.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class FollowRequestCountView(APIView):
     permission_classes = [IsAuthenticated]
