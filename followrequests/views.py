@@ -58,7 +58,10 @@ class FollowRequestAcceptView(generics.UpdateAPIView):
             followed=follow_request.receiver
         )
 
-        return Response({"detail": "Follow request accepted."}, status=status.HTTP_200_OK)
+        # Delete the follow request after accepting
+        follow_request.delete()
+
+        return Response({"detail": "Follow request accepted and removed."}, status=status.HTTP_200_OK)
 
 
 class FollowRequestDeclineView(generics.DestroyAPIView):
