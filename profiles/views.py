@@ -9,6 +9,8 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from followers.models import Follower
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+
 
 class ProfileList(generics.ListAPIView):
     """
