@@ -81,5 +81,7 @@ class ProfileDeleteView(generics.DestroyAPIView):
 
     def delete(self, request, *args, **kwargs):
         profile = self.get_object()
-        profile.delete()
-        return Response({"detail": "Profile deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+        user = profile.owner  # Assuming `owner` is the OneToOneField linking Profile to User
+        profile.delete()  # Delete the profile
+        user.delete()  # Delete the user account
+        return Response({"detail": "Profile and user deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
