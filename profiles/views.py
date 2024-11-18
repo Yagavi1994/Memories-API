@@ -76,3 +76,20 @@ class ProfileDetail(generics.RetrieveUpdateAPIView):
 class ProfileDeleteView(generics.DestroyAPIView):
     queryset = Profile.objects.all()
     permission_classes = [IsAuthenticated]
+
+    def destroy(self, request, *args, **kwargs):
+        # Get the object to delete
+        instance = self.get_object()
+
+        # Optional: Add custom logic (e.g., check if the user owns the profile)
+        if instance.owner != request.user:
+            return Response(
+                {"detail": "You do not have permission to delete this profile."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        # Delete the profile
+        self.perform_destroy(instance)
+
+        return Response({"detail": "Profile deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+
