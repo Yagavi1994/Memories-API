@@ -80,6 +80,16 @@ CSRF_TRUSTED_ORIGINS = [
     'https://memories-frontend-895c7e867e2e.herokuapp.com',
 ]
 
+CORS_ALLOW_METHODS = [
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+]
+
+
 if 'CLIENT_ORIGIN' in os.environ:
     CORS_ALLOWED_ORIGINS = [
         os.environ.get('CLIENT_ORIGIN')

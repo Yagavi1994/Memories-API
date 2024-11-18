@@ -28,8 +28,7 @@ class FollowRequestSerializer(serializers.ModelSerializer):
             # Generate absolute URL for the image
             return request.build_absolute_uri(obj.requester.profile.image.url)
         return None  # Return None if no profile image is set
-            # return "https://res.cloudinary.com/dz60wxmka/image/upload/v1730812795/media/images/Profile-pic_dxmgt2.webp"
-
+           
     def validate(self, data):
         # Prevent users from sending follow requests to themselves
         if self.context['request'].user == data.get('receiver'):

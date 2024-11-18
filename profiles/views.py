@@ -7,6 +7,7 @@ from .serializers import ProfileSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from followers.models import Follower
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.permissions import IsAuthenticated
 
 class ProfileList(generics.ListAPIView):
     """
@@ -71,3 +72,7 @@ class ProfileDetail(generics.RetrieveUpdateAPIView):
             profile.can_view_milestones = False
 
         return profile
+
+class ProfileDeleteView(generics.DestroyAPIView):
+    queryset = Profile.objects.all()
+    permission_classes = [IsAuthenticated]
