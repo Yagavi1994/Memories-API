@@ -1,4 +1,5 @@
 from django.db.models import Count
+from rest_framework.response import Response
 from rest_framework import generics, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from memories.permissions import IsOwnerOrReadOnly
@@ -75,21 +76,10 @@ class ProfileDetail(generics.RetrieveUpdateAPIView):
 
 class ProfileDeleteView(generics.DestroyAPIView):
     queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
     permission_classes = [IsAuthenticated]
 
-    def destroy(self, request, *args, **kwargs):
-        # Get the object to delete
-        instance = self.get_object()
-
-        # Optional: Add custom logic (e.g., check if the user owns the profile)
-        if instance.owner != request.user:
-            return Response(
-                {"detail": "You do not have permission to delete this profile."},
-                status=status.HTTP_403_FORBIDDEN,
-            )
-
-        # Delete the profile
-        self.perform_destroy(instance)
-
+    def delete(self, request, *args, **kwargs):
+        profile = self.get_object()
+        profile.delete()
         return Response({"detail": "Profile deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
-
