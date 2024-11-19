@@ -14,7 +14,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     is_private = serializers.BooleanField(required=False)
     can_view_posts = serializers.SerializerMethodField()
     can_view_milestones = serializers.SerializerMethodField()
-    request_sent = serializers.SerializerMethodField()  # Add this field
+    request_sent = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
@@ -23,7 +23,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             'content', 'image', 'is_owner', 'following_id',
             'posts_count', 'followers_count', 'following_count', 
             'milestones_count', 'is_private', 'can_view_posts',
-            'can_view_milestones', 'request_sent',  # Ensure it's included here
+            'can_view_milestones', 'request_sent',
         ]
 
     def get_is_owner(self, obj):

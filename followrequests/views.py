@@ -8,16 +8,33 @@ from followers.models import Follower
 from .serializers import FollowRequestSerializer
 
 
+from rest_framework import generics, status
+from rest_framework.exceptions import ValidationError
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from .models import FollowRequest
+from .serializers import FollowRequestSerializer
+
+
 class FollowRequestListCreateView(generics.ListCreateAPIView):
-    queryset = FollowRequest.objects.all()
     serializer_class = FollowRequestSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        # Return only the follow requests for the logged-in user
+        return FollowRequest.objects.filter(receiver=self.request.user, status="pending")
+
     def perform_create(self, serializer):
-        # Check if a follow request already exists between the requester and receiver
+        receiver = serializer.validated_data['receiver']
+
+        # Prevent sending a follow request to yourself
+        if self.request.user == receiver:
+            raise ValidationError("You cannot send a follow request to yourself.")
+
+        # Check if a follow request already exists
         existing_request = FollowRequest.objects.filter(
             requester=self.request.user,
-            receiver=serializer.validated_data['receiver']
+            receiver=receiver
         ).first()
 
         if existing_request:
@@ -26,14 +43,18 @@ class FollowRequestListCreateView(generics.ListCreateAPIView):
                 raise ValidationError("You are already following this user.")
             elif existing_request.status == "pending":
                 raise ValidationError("A follow request is already pending.")
-            else:
-                # Update the existing request to pending
+            elif existing_request.status in ["declined", "unfollowed"]:
+                # Update the declined or unfollowed request to pending
                 existing_request.status = "pending"
                 existing_request.save()
-                return  # Skip creating a new request
+                return Response(
+                    {"detail": "Follow request has been resent."},
+                    status=status.HTTP_200_OK,
+                )
 
-        # Create a new follow request if none exists
+        # If no existing request, create a new follow request
         serializer.save(requester=self.request.user)
+
 
 
 class FollowRequestAcceptView(generics.UpdateAPIView):
