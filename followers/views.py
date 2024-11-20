@@ -15,18 +15,19 @@ class FollowerList(generics.ListCreateAPIView):
     serializer_class = FollowerSerializer
 
     def perform_create(self, serializer):
-        followed_user = serializer.validated_data['followed']
+        followed_id = serializer.validated_data.get('followed')
+        print(f"Follow request received for Profile ID: {followed_id}")
         
-        # Check if the followed user's profile is private
-        if followed_user.profile.is_private:
-            # Create a follow request instead of following directly
-            FollowRequest.objects.get_or_create(
-                requester=self.request.user, receiver=followed_user, status='pending'
-            )
-            return Response({"detail": "Follow request sent."}, status=status.HTTP_201_CREATED)
-        else:
-            # Directly follow the user if the profile is public
-            serializer.save(owner=self.request.user)
+        # Verify if the profile exists
+        try:
+            followed_user = User.objects.get(pk=followed_id)
+            print(f"Followed User Found: {followed_user}")
+        except User.DoesNotExist:
+            print(f"User with ID {followed_id} does not exist.")
+            raise serializers.ValidationError({'followed': 'Invalid PK - User does not exist.'})
+        
+        serializer.save(owner=self.request.user)
+
 
 class FollowerDetail(generics.RetrieveDestroyAPIView):
     """

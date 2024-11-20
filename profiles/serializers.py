@@ -16,16 +16,6 @@ class ProfileSerializer(serializers.ModelSerializer):
     can_view_milestones = serializers.SerializerMethodField()
     request_sent = serializers.SerializerMethodField()
 
-    class Meta:
-        model = Profile
-        fields = [
-            'id', 'owner', 'created_at', 'updated_at', 'name',
-            'content', 'image', 'is_owner', 'following_id',
-            'posts_count', 'followers_count', 'following_count', 
-            'milestones_count', 'is_private', 'can_view_posts',
-            'can_view_milestones', 'request_sent',
-        ]
-
     def get_is_owner(self, obj):
         request = self.context['request']
         return request.user == obj.owner
@@ -54,3 +44,14 @@ class ProfileSerializer(serializers.ModelSerializer):
                 requester=user, receiver=obj.owner, status='pending'  # Ensure `owner` field matches the model
             ).exists()
         return False
+    
+    class Meta:
+        model = Profile
+        fields = [
+            'id', 'owner', 'created_at', 'updated_at', 'name',
+            'content', 'image', 'is_owner', 'following_id',
+            'posts_count', 'followers_count', 'following_count', 
+            'milestones_count', 'is_private', 'can_view_posts',
+            'can_view_milestones', 'request_sent',
+        ]
+
