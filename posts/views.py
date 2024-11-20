@@ -1,6 +1,5 @@
 from django.db.models import Count
 from rest_framework import generics, permissions, filters
-from rest_framework.parsers import MultiPartParser, FormParser
 from django_filters.rest_framework import DjangoFilterBackend
 from memories.permissions import IsOwnerOrReadOnly
 from .models import Post
@@ -24,21 +23,24 @@ class PostList(generics.ListCreateAPIView):
         DjangoFilterBackend,
     ]
     filterset_fields = [
-        'owner__followed__owner__profile',
-        'likes__owner__profile',
-        'owner__profile',
+        'owner__followed__owner__profile',  # Posts by followed users
+        'likes__owner__profile',  # Posts liked by specific profiles
+        'owner__profile',  # Posts by specific profile
     ]
     search_fields = [
-        'owner__username',
-        'title',
+        'owner__username',  # Search by username
+        'title',  # Search by title
     ]
     ordering_fields = [
-        'likes_count',
-        'comments_count',
-        'likes__created_at',
+        'likes_count',  # Order by number of likes
+        'comments_count',  # Order by number of comments
+        'likes__created_at',  # Order by like creation time
     ]
     
     def perform_create(self, serializer):
+        """
+        Associate the post with the logged-in user when creating.
+        """
         serializer.save(owner=self.request.user)
 
 
