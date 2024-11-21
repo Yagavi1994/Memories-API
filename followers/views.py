@@ -19,12 +19,12 @@ class FollowerList(generics.ListCreateAPIView):
         print(f"Follow request received for Profile ID: {followed_id}")
         
         # Verify if the profile exists
-        try:
-            followed_user = User.objects.get(pk=followed_id)
-            print(f"Followed User Found: {followed_user}")
-        except User.DoesNotExist:
-            print(f"User with ID {followed_id} does not exist.")
-            raise serializers.ValidationError({'followed': 'Invalid PK - User does not exist.'})
+        # try:
+        #     followed_user = User.objects.get(pk=followed_id)
+        #     print(f"Followed User Found: {followed_user}")
+        # except User.DoesNotExist:
+        #     print(f"User with ID {followed_id} does not exist.")
+        #     raise serializers.ValidationError({'followed': 'Invalid PK - User does not exist.'})
         
         serializer.save(owner=self.request.user)
 
