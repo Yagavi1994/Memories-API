@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 class FollowRequestSerializer(serializers.ModelSerializer):
     # Fields for requester and receiver
     requester = serializers.ReadOnlyField(source='requester.username')
-    receiver = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())  # Ensure 'receiver' is mapped
+    receiver = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) # Ensure 'receiver' is mapped
 
     # Profile image and username of the requester
     requester_profile_image = serializers.SerializerMethodField()

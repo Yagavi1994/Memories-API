@@ -8,25 +8,22 @@ from followrequests.models import FollowRequest
 
 class FollowerList(generics.ListCreateAPIView):
     """
-    List all followers or follow a user if logged in.
+    List all followers or follow a user if logged in (for public profiles only).
     """
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     queryset = Follower.objects.all()
     serializer_class = FollowerSerializer
 
     def perform_create(self, serializer):
-        followed_id = serializer.validated_data.get('followed')
-        print(f"Follow request received for Profile ID: {followed_id}")
+        followed_user = serializer.validated_data['followed']
+
+        # Public profile logic only
+        if followed_user.profile.is_private:
+            raise serializers.ValidationError({"detail": "Cannot directly follow a private profile."})
         
-        # Verify if the profile exists
-        # try:
-        #     followed_user = User.objects.get(pk=followed_id)
-        #     print(f"Followed User Found: {followed_user}")
-        # except User.DoesNotExist:
-        #     print(f"User with ID {followed_id} does not exist.")
-        #     raise serializers.ValidationError({'followed': 'Invalid PK - User does not exist.'})
-        
+        # Create a follower for public profiles
         serializer.save(owner=self.request.user)
+
 
 
 class FollowerDetail(generics.RetrieveDestroyAPIView):
