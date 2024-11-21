@@ -8,7 +8,7 @@ from followrequests.models import FollowRequest
 
 class FollowerList(generics.ListCreateAPIView):
     """
-    List all followers or follow a user if logged in (for public profiles only).
+    List all followers or follow a user if logged in.
     """
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     queryset = Follower.objects.all()
@@ -17,12 +17,14 @@ class FollowerList(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         followed_user = serializer.validated_data['followed']
 
-        # Public profile logic only
+        # Check if the followed user's profile is private
         if followed_user.profile.is_private:
-            raise serializers.ValidationError({"detail": "Cannot directly follow a private profile."})
-        
-        # Create a follower for public profiles
-        serializer.save(owner=self.request.user)
+            # Create a follow request instead of following directly
+            FollowRequest.objects.get_or_create(
+                requester=self.request.user, receiver=followed_user, status='pending')
+        else:
+            # Directly follow the user if the profile is public
+            serializer.save(owner=self.request.user)
 
 
 

@@ -33,17 +33,22 @@ class FollowRequestListCreateView(generics.ListCreateAPIView):
         ).first()
 
         if existing_request:
-            if existing_request.status == "pending":
+            # Handle existing follow requests based on their status
+            if existing_request.status == "accepted":
+                raise ValidationError({"detail": "You are already following this user."})
+            elif existing_request.status == "pending":
                 raise ValidationError({"detail": "A follow request is already pending."})
             elif existing_request.status in ["declined", "unfollowed"]:
                 # Update the declined or unfollowed request to pending
                 existing_request.status = "pending"
                 existing_request.save()
-                return Response({"detail": "Follow request has been resent."}, status=status.HTTP_200_OK)
+                return Response(
+                    {"detail": "Follow request has been resent."},
+                    status=status.HTTP_200_OK,
+                )
 
-        # Create a new follow request
+        # If no existing request, create a new follow request
         serializer.save(requester=self.request.user)
-
 
 
 class FollowRequestAcceptView(generics.UpdateAPIView):
