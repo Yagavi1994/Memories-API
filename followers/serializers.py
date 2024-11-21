@@ -1,5 +1,6 @@
 from django.db import IntegrityError
 from rest_framework import serializers
+from django.contrib.auth.models import User
 from .models import Follower
 
 
@@ -8,8 +9,9 @@ class FollowerSerializer(serializers.ModelSerializer):
     Serializer for the Follower model
     Create method handles the unique constraint on 'owner' and 'followed'
     """
-    owner = serializers.ReadOnlyField(source='owner.username')
-    followed_name = serializers.ReadOnlyField(source='followed.username')
+    owner = serializers.ReadOnlyField(source='owner.username')  # The user who is following
+    followed = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())  # User being followed
+    followed_name = serializers.ReadOnlyField(source='followed.username')  # Username of the followed user
 
     class Meta:
         model = Follower
