@@ -142,7 +142,6 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',        # Session management
     'django.contrib.auth.middleware.AuthenticationMiddleware',    # Authentication
     'django.middleware.common.CommonMiddleware',                  # General response headers
-    'memories.middleware.DisableCacheMiddleware',                 # Disable cache (after CommonMiddleware)
     'django.middleware.csrf.CsrfViewMiddleware',                  # CSRF protection
     'django.contrib.messages.middleware.MessageMiddleware',       # Message framework
     'django.middleware.clickjacking.XFrameOptionsMiddleware',     # Clickjacking protection
