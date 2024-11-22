@@ -137,15 +137,17 @@ INSTALLED_APPS = [
 ]
 SITE_ID = 1
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',                      # Handles CORS headers early
+    'django.middleware.security.SecurityMiddleware',              # For security-related headers
+    'django.contrib.sessions.middleware.SessionMiddleware',        # Session management
+    'django.contrib.auth.middleware.AuthenticationMiddleware',    # Authentication
+    'django.middleware.common.CommonMiddleware',                  # General response headers
+    'memories.middleware.DisableCacheMiddleware',                 # Disable cache (after CommonMiddleware)
+    'django.middleware.csrf.CsrfViewMiddleware',                  # CSRF protection
+    'django.contrib.messages.middleware.MessageMiddleware',       # Message framework
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',     # Clickjacking protection
 ]
+
 
 ROOT_URLCONF = 'memories.urls'
 
