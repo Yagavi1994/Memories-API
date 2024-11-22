@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import generics, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from memories.permissions import IsOwnerOrReadOnly
+from rest_framework import permissions, status
 from .models import Profile
 from .serializers import ProfileSerializer
 from rest_framework.views import APIView
@@ -89,3 +90,20 @@ class ProfileDeleteView(generics.DestroyAPIView):
         user.delete()  # Delete the user account
         return Response({"detail": "Profile and user deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
 
+class PrivacyStatusView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        # Get the privacy status of the logged-in user
+        profile = request.user.profile
+        return Response({"privacy_status": profile.privacy_status}, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        # Update the privacy status
+        profile = request.user.profile
+        new_status = request.data.get("privacy_status")
+        if new_status is not None:
+            profile.privacy_status = new_status
+            profile.save()
+            return Response({"message": "Privacy status updated"}, status=status.HTTP_200_OK)
+        return Response({"error": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
