@@ -5,6 +5,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from memories.permissions import IsOwnerOrReadOnly
 from .models import Profile
 from .serializers import ProfileSerializer
+from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from followers.models import Follower
 from rest_framework.exceptions import PermissionDenied
@@ -87,3 +88,4 @@ class ProfileDeleteView(generics.DestroyAPIView):
         profile.delete()  # Delete the profile
         user.delete()  # Delete the user account
         return Response({"detail": "Profile and user deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+
