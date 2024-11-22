@@ -11,8 +11,14 @@ class FollowerList(generics.ListCreateAPIView):
     List all followers or follow a user if logged in.
     """
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    queryset = Follower.objects.all()
     serializer_class = FollowerSerializer
+
+    def get_queryset(self):
+        # Return followers for the currently authenticated user
+        if self.request.user.is_authenticated:
+            return Follower.objects.filter(owner=self.request.user)
+        # If the user is not authenticated, return an empty queryset
+        return Follower.objects.none()
 
     def perform_create(self, serializer):
         followed_user = serializer.validated_data['followed']
