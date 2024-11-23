@@ -77,8 +77,4 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
 
         return profile
 
-    def perform_destroy(self, instance):
-        # Delete the user when the profile is deleted
-        if instance.owner:
-            instance.owner.delete()
 
