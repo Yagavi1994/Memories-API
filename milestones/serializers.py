@@ -41,16 +41,16 @@ class MilestoneSerializer(serializers.ModelSerializer):
             return like.id if like else None
         return None
 
-    def validate(self, data):
-        # Convert '0' values for numeric fields to None
-        fields_to_check = ['age_years', 'age_months', 'height', 'weight']
-        for field in fields_to_check:
-            if data.get(field) == 0:
-                data[field] = None
+    # def validate(self, data):
+    #     # Convert '0' values for numeric fields to None
+    #     fields_to_check = ['age_years', 'age_months', 'height', 'weight']
+    #     for field in fields_to_check:
+    #         if data.get(field) == 0:
+    #             data[field] = None
 
-        # Set milestone_date to None if it's not provided
-        if 'milestone_date' not in data:
-            data['milestone_date'] = None
+    #     # Set milestone_date to None if it's not provided
+    #     if 'milestone_date' not in data:
+    #         data['milestone_date'] = None
             
         return data
     class Meta:
