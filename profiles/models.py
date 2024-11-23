@@ -13,6 +13,12 @@ class Profile(models.Model):
     )
     is_private = models.BooleanField(default=False)  # Privacy setting field
     
+    def delete(self, *args, **kwargs):
+        # Delete the associated user
+        if self.user:
+            self.user.delete()
+        super().delete(*args, **kwargs)
+        
     class Meta:
         ordering = ['-created_at']
 

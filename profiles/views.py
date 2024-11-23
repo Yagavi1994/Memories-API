@@ -77,14 +77,8 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
 
         return profile
 
-# class ProfileDeleteView(generics.DestroyAPIView):
-#     queryset = Profile.objects.all()
-#     serializer_class = ProfileSerializer
-#     permission_classes = [IsAuthenticated]
+    def perform_destroy(self, instance):
+        # Delete the user when the profile is deleted
+        if instance.owner:
+            instance.owner.delete()
 
-#     def delete(self, request, *args, **kwargs):
-#         profile = self.get_object()
-#         user = profile.owner  # Assuming `owner` is the OneToOneField linking Profile to User
-#         profile.delete()  # Delete the profile
-#         user.delete()  # Delete the user account
-#         return Response({"detail": "Profile and user deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
