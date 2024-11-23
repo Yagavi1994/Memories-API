@@ -3,7 +3,6 @@ from rest_framework.response import Response
 from rest_framework import generics, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from memories.permissions import IsOwnerOrReadOnly
-from rest_framework import permissions, status
 from .models import Profile
 from .serializers import ProfileSerializer
 from rest_framework.views import APIView
