@@ -53,6 +53,6 @@ class MilestoneDetail(generics.RetrieveUpdateDestroyAPIView):
         comments_count=Count('comment', distinct=True)
     ).order_by('-created_at')
 
-    def post(self, request, *args, **kwargs):
-        kwargs['partial'] = True  # Ensure partial update is allowed
-        return self.update(request, *args, **kwargs)
+    # def patch(self, request, *args, **kwargs):
+    #     # kwargs['partial'] = True  # Ensure partial update is allowed
+    #     return self.update(request, *args, **kwargs)
