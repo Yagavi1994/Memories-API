@@ -12,13 +12,7 @@ class Profile(models.Model):
         upload_to='images/', default='images/Profile-pic_dxmgt2'
     )
     is_private = models.BooleanField(default=False)  # Privacy setting field
-    
-    def delete(self, *args, **kwargs):
-        # Delete the associated user
-        if self.user:
-            self.user.delete()
-        super().delete(*args, **kwargs)
-        
+
     class Meta:
         ordering = ['-created_at']
 
