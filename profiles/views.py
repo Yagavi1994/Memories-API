@@ -81,5 +81,21 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
         # Delete the user when the profile is deleted
         if instance.owner:
             instance.owner.delete()
-
-
+            self.response.set_cookie(
+                key=JWT_AUTH_COOKIE,
+                value='',
+                httponly=True,
+                expires='Thu, 01 Jan 1970 00:00:00 GMT',
+                max_age=0,
+                samesite=JWT_AUTH_SAMESITE,
+                secure=JWT_AUTH_SECURE,
+            )
+            self.response.set_cookie(
+                key=JWT_AUTH_REFRESH_COOKIE,
+                value='',
+                httponly=True,
+                expires='Thu, 01 Jan 1970 00:00:00 GMT',
+                max_age=0,
+                samesite=JWT_AUTH_SAMESITE,
+                secure=JWT_AUTH_SECURE,
+            )
