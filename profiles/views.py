@@ -11,7 +11,12 @@ from followers.models import Follower
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
-
+from rest_framework.response import Response
+from rest_framework import status
+from memories.settings import (
+    JWT_AUTH_COOKIE, JWT_AUTH_REFRESH_COOKIE, JWT_AUTH_SAMESITE,
+    JWT_AUTH_SECURE,
+)
 
 class ProfileList(generics.ListAPIView):
     """
@@ -81,7 +86,8 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
         # Delete the user when the profile is deleted
         if instance.owner:
             instance.owner.delete()
-            self.response.set_cookie(
+            response = Response(status=status.HTTP_204_NO_CONTENT)
+            response.set_cookie(
                 key=JWT_AUTH_COOKIE,
                 value='',
                 httponly=True,
@@ -90,7 +96,7 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
                 samesite=JWT_AUTH_SAMESITE,
                 secure=JWT_AUTH_SECURE,
             )
-            self.response.set_cookie(
+            response.set_cookie(
                 key=JWT_AUTH_REFRESH_COOKIE,
                 value='',
                 httponly=True,
@@ -99,3 +105,4 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
                 samesite=JWT_AUTH_SAMESITE,
                 secure=JWT_AUTH_SECURE,
             )
+            return response
