@@ -1,5 +1,5 @@
 from django.db.models import Count
-from rest_framework import generics, permissions, filters, status
+from rest_framework import generics, permissions, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from memories.permissions import IsOwnerOrReadOnly
@@ -37,8 +37,11 @@ class MilestoneList(generics.ListCreateAPIView):
         'comments_count',
         'likes__created_at',
     ]
-    
+
     def perform_create(self, serializer):
+        """
+        Save the milestone with the currently authenticated user as the owner.
+        """
         serializer.save(owner=self.request.user)
 
 
@@ -52,7 +55,3 @@ class MilestoneDetail(generics.RetrieveUpdateDestroyAPIView):
         likes_count=Count('likes', distinct=True),
         comments_count=Count('comment', distinct=True)
     ).order_by('-created_at')
-
-    # def patch(self, request, *args, **kwargs):
-    #     # kwargs['partial'] = True  # Ensure partial update is allowed
-    #     return self.update(request, *args, **kwargs)

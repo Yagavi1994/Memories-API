@@ -36,7 +36,7 @@ class PostList(generics.ListCreateAPIView):
         'comments_count',  # Order by number of comments
         'likes__created_at',  # Order by like creation time
     ]
-    
+
     def perform_create(self, serializer):
         """
         Associate the post with the logged-in user when creating.
