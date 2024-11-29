@@ -89,7 +89,6 @@ CORS_ALLOW_METHODS = [
     "PUT",
 ]
 
-APPEND_SLASH = False
 
 if 'CLIENT_ORIGIN' in os.environ:
     CORS_ALLOWED_ORIGINS = [
