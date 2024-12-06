@@ -15,7 +15,7 @@ The repository for the front-end can be viewed [here](https://github.com/Yagavi1
 ## Table of Contents
 
 - [Overview](#overview)
-- [User Stories] (#user-stories)
+- [User Stories](#user-stories)
 - [Database Scheme](#database-scheme)
 - [Features](#features)
 - [Technology Stack](#technology-stack)
@@ -66,7 +66,7 @@ The **Memories API** is built with Django Rest Framework (DRF) which serves as t
 
 This entity-relationship diagram shows a well-structured design for a Memories, allowing for efficient management of posts, milestones, comments, liked, followers and user profiles while ensuring smooth interaction between these entities.
 
-![Database Scheme]()
+![Database Scheme](readme/memories-database-scheme.png)
 
 ---
 
@@ -299,6 +299,7 @@ The libraries used in this project are located in the requirements.txt file and 
 - [PyJWT](https://pypi.org/project/PyJWT/) - A Python implementation of RFC 7519.
 - [requests-oauhlib](https://pypi.org/project/requests-oauthlib/) - Provides first-class OAuth library support for Requests.
 - [sqlparse](https://pypi.org/project/sqlparse/) - sqlparse is a non-validating SQL parser for Python.
+- [Google Drawio](https://app.diagrams.net/) to create the database schema.
 
 ## Deployment
 
