@@ -6,11 +6,13 @@ The entire basis of this API is to facilitate and support a smooth, seamless use
 
 ![Memories API](readme/home.png)
 
-The deployed API can be viewed [here](https://memories-backend-16d0ed87a1d2.herokuapp.com/)
+- The deployed API can be viewed [here](https://memories-backend-16d0ed87a1d2.herokuapp.com/)
 
-The deployed front-end can be viewed [here](https://memories-frontend-895c7e867e2e.herokuapp.com)
+- The TESTING.md of Memories-API can be viewed [here](TESTING.md)
 
-The repository for the front-end can be viewed [here](https://github.com/Yagavi1994/memories)
+- The deployed front-end can be viewed [here](https://memories-frontend-895c7e867e2e.herokuapp.com)
+
+- The repository for the front-end can be viewed [here](https://github.com/Yagavi1994/memories)
 
 ## Table of Contents
 
@@ -160,6 +162,20 @@ The admin tools not only empower platform managers to maintain a safe and respec
 ---
 
 ## API Models and Endpoints
+
+### Registration
+
+A user is registered and created by entering username, password and confirm password in this endpoint. It is a built in feature of Django Rest Framework.
+
+- **Endpoints**:
+  - `/dj-rest-auth/registration/`: Create user
+
+### Login
+
+A user can be logged in by entering a valid username and password in this endpoint.
+
+- **Endpoints**:
+  -`/dj-rest-auth/login endpoint/`: Login user
 
 ### Profiles
 
