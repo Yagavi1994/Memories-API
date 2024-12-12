@@ -47,7 +47,7 @@ The following CRUD Tests can be performed as an admin.
 | Followers | Update | Followers update reflect accurately | ✅ |
 | Followers | Delete | Followers removed successfully | ✅ |
 | Follow Requests | Create | Follow Requests created | ✅ |
-| Follow Requests | Read | Follow Requests visible Follow Requests  page | ✅ |
+| Follow Requests | Read | Follow Requests visible Follow Requests page | ✅ |
 | Follow Requests | Update | Follow Requests update reflect accurately | ✅ |
 | Follow Requests | Delete | Follow Requests removed successfully | ✅ |
 
@@ -76,5 +76,3 @@ The following CRUD Tests can be performed as an admin.
 | Invalid Password           | Send a POST request to `/dj-rest-auth/login/` with an incorrect `password`.          | Login fails, and an error message is returned indicating invalid credentials.                 | ✅         |
 | Missing Fields             | Send a POST request to `/dj-rest-auth/login/` without `username` or `password`.       | Login fails, and an error message is returned indicating the missing fields.                  | ✅         |
 | Token Persistence          | Log in successfully and verify the token persistence during the session.             | User remains logged in until the token expires or they log out.                               | ✅         |
-
-These test cases ensure that the Registration and Login features work as expected and return appropriate responses for different scenarios.

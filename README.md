@@ -6,14 +6,10 @@ The entire basis of this API is to facilitate and support a smooth, seamless use
 
 ![Memories API](readme/home.png)
 
-- The deployed API can be viewed [here](https://memories-backend-16d0ed87a1d2.herokuapp.com/)
-
-- The TESTING.md of Memories-API can be viewed [here](TESTING.md)
-
-- The deployed front-end can be viewed [here](https://memories-frontend-895c7e867e2e.herokuapp.com)
-
-- The repository for the front-end can be viewed [here](https://github.com/Yagavi1994/memories)
-
+- Link to the deployed API website: <a href="https://memories-backend-16d0ed87a1d2.herokuapp.com/" target="_blank" rel="noopener noreferrer">Memories API</a>  
+- Link to TESTING.md: <a href="TESTING.md" target="_blank" rel="noopener noreferrer">Memories API Testing</a>  
+- Link to the deployed front-end website: <a href="https://memories-frontend-895c7e867e2e.herokuapp.com/" target="_blank" rel="noopener noreferrer">Memories Frontend</a>  
+- Link to the front-end repository: <a href="https://github.com/Yagavi1994/memories" target="_blank" rel="noopener noreferrer">Memories Frontend Repository</a>  
 ## Table of Contents
 
 - [Overview](#overview)
@@ -163,19 +159,27 @@ The admin tools not only empower platform managers to maintain a safe and respec
 
 ## API Models and Endpoints
 
-### Registration
+### User Registration
 
-A user is registered and created by entering username, password and confirm password in this endpoint. It is a built in feature of Django Rest Framework.
+Users can register by providing a username, password, and confirmation of the password. This functionality is powered by Django Rest Framework’s built-in registration feature.
 
-- **Endpoints**:
-  - `/dj-rest-auth/registration/`: Create user
+- **Endpoint**:  
+  - `/dj-rest-auth/registration/` – Allows users to create an account by submitting the required details.
 
-### Login
+![Register](readme/register.png)
 
-A user can be logged in by entering a valid username and password in this endpoint.
+---
 
-- **Endpoints**:
-  -`/dj-rest-auth/login endpoint/`: Login user
+### User Login
+
+Registered users can log in to their accounts by providing valid credentials, including a username and password. 
+
+- **Endpoint**:  
+  - `/dj-rest-auth/login/` – Authenticates users and grants access to their accounts.
+
+![Login](readme/login.png)
+
+---
 
 ### Profiles
 
