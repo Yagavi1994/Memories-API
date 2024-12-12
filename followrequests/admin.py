@@ -9,7 +9,7 @@ class FollowRequestAdmin(admin.ModelAdmin):
     search_fields = ['requester__username', 'receiver__username']
 
     def requester_profile_image(self, obj):
-        if obj.requester.profile.image:  # Assuming the profile model has an `image` field
+        if obj.requester.profile.image:
             return format_html(
                 '<img src="{}" width="50" height="50" style="border-radius: 50%;" />',
                 obj.requester.profile.image.url
