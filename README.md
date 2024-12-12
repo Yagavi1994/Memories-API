@@ -450,4 +450,4 @@ To clone and set up this project you need to follow the steps below.
 
 ## Acknowledgments
 
-- My mentor at Code Institute, Richard Wells, for code review, help and feedback. Very much appreciated!
+- A heartfelt thank you to my mentor at Code Institute, Richard Wells, for his invaluable code reviews, guidance, and constructive feedback throughout the project. Your support has been greatly appreciated!
